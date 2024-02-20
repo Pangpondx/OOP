@@ -1,0 +1,52 @@
+package board.game;
+
+public class Figure {
+
+    String name; //ตัวแปรเก็บชื่อ
+    String color; //ตัวแปรเก็บสี
+    int row; //ตัวแปรเก็บแถว
+    int columns; //ตัวแปรเก็บหลัก
+
+    public Figure(String name, String color, int row, int columns) { //สร้างFigure
+        this.name = name;
+        this.color = color;
+        this.row = row - 1;
+        this.columns = columns - 1;
+    }
+
+    String getColor() { //รับค่าสี
+        return color;
+    }
+
+    int getRow() { //รับค่าแถว
+        return row;
+    }
+
+    int getColumns() { //รับค่าหลัก
+        return columns;
+    }
+
+    String getName() { //รับค่าชื่อ
+        return name;
+    }
+
+    void setPosition(int row, int columns) { //เซ็ทตำแหน่งก่อนนำไปใส่ในอาเรย์
+        this.row = row - 1;
+        this.columns = columns - 1;
+    }
+
+    boolean freeMove(Board b, int row, int columns) { //ฟังก์ชั่นตรวจเช็คว่าเป็นสีเดียวกันหรือไม่
+        row -= 1;
+        columns -= 1;
+        if (row < 0 || row >= b.getBoardSize() || columns < 0 || columns >= b.getBoardSize()) {
+            System.out.println("There is no such space on the board.");
+            return false;
+        }
+        Figure fg = b.getPposition(row, columns);
+        if (fg != null && fg.getColor() == color) {
+            System.out.println("It cannot be moved to a location of the same color.");
+            return false;
+        }
+        return true;
+    }
+}# OOP
