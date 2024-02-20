@@ -1,52 +1,22 @@
 package board.game;
 
-public class Figure {
+public class BoardGame {
 
-    String name; //ตัวแปรเก็บชื่อ
-    String color; //ตัวแปรเก็บสี
-    int row; //ตัวแปรเก็บแถว
-    int columns; //ตัวแปรเก็บหลัก
-
-    public Figure(String name, String color, int row, int columns) { //สร้างFigure
-        this.name = name;
-        this.color = color;
-        this.row = row - 1;
-        this.columns = columns - 1;
+    public static void main(String[] args) {
+        Board b = new Board(8); //สร้างอาเรย์ขนาด8*8
+        Figure p = new Figure("PP","White",1,1); //สร้างFigureโดยกำหนดสีและตำแหน่งที่ยืน
+        Figure v = new Figure("VD","White",2,4);
+        Figure o = new Figure("OA","Black",7,8);
+        Figure g = new Figure("GU","Black",5,3);
+        b.setFigure(p); //เซ็ทPositionภายในบอร์ด
+        b.setFigure(v);
+        b.setFigure(o);
+        b.setFigure(g);
+        b.moveTo(p, 1, 2); //เคลื่อนย้ายFigure
+        b.moveTo(o, 8, 8);
+        b.moveTo(v, 1, 8);
+        b.moveTo(g, 10, 7);
+        b.moveTo(g, -1, 8);
+        b.moveTo(g, 1, 2);
     }
-
-    String getColor() { //รับค่าสี
-        return color;
-    }
-
-    int getRow() { //รับค่าแถว
-        return row;
-    }
-
-    int getColumns() { //รับค่าหลัก
-        return columns;
-    }
-
-    String getName() { //รับค่าชื่อ
-        return name;
-    }
-
-    void setPosition(int row, int columns) { //เซ็ทตำแหน่งก่อนนำไปใส่ในอาเรย์
-        this.row = row - 1;
-        this.columns = columns - 1;
-    }
-
-    boolean freeMove(Board b, int row, int columns) { //ฟังก์ชั่นตรวจเช็คว่าเป็นสีเดียวกันหรือไม่
-        row -= 1;
-        columns -= 1;
-        if (row < 0 || row >= b.getBoardSize() || columns < 0 || columns >= b.getBoardSize()) {
-            System.out.println("There is no such space on the board.");
-            return false;
-        }
-        Figure fg = b.getPposition(row, columns);
-        if (fg != null && fg.getColor() == color) {
-            System.out.println("It cannot be moved to a location of the same color.");
-            return false;
-        }
-        return true;
-    }
-}# OOP
+}
