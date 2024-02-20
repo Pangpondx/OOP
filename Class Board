@@ -1,0 +1,68 @@
+package board.game;
+
+public class Board {
+
+    int boardSize; //ตัวแปรเก็บขนาดของบอร์ด
+    Figure[][] chessBoard; //อาเรย์ขนาดboardSize*boardSize
+
+    public Board(int boardSize) { //สร้างบอร์ด
+        this.boardSize = boardSize;
+        this.chessBoard = new Figure[boardSize][boardSize];
+    }
+
+    int getBoardSize() { //รับขนาดของบอร์ด
+        return boardSize;
+    }
+
+    Figure getPposition(int nrow, int ncolumns) { //รับตำแหน่งของFigure
+        if (nrow < 0 || nrow >= boardSize || ncolumns < 0 || ncolumns >= boardSize) {
+            return null;
+        }
+        return chessBoard[nrow][ncolumns];
+    }
+
+    void setFigure(Figure a) { //เซ็ทFigureลงในบอร์ด
+        System.out.println("--------------------------------");
+        System.out.println("          Set board!!!          ");
+        int prow = a.getRow();
+        int pcolumns = a.getColumns();
+        if (prow < 0 || prow >= boardSize || pcolumns < 0 || pcolumns >= boardSize) {
+            System.out.println("There is no such space on the board.");
+            System.exit(0); 
+        } else if (chessBoard[prow][pcolumns] != null) {
+            System.out.println("This area already has other figures.");
+        } else {
+            chessBoard[prow][pcolumns] = a;
+        }
+        boardDisplay();
+    }
+
+    void moveTo(Figure a, int row, int columns) { //ฟังก์ชั่นย้ายตัวFigure
+        System.out.println("         Move figure!!!         ");
+        if (!a.freeMove(this, row, columns)) {
+            return;
+        }
+        int crow = a.getRow();
+        int ccolumns = a.getColumns();
+        chessBoard[crow][ccolumns] = null;
+        a.setPosition(row, columns);
+        chessBoard[row-1][columns-1] = a;
+        boardDisplay();
+    }
+
+    void boardDisplay() { //ฟังก์ชั่นแสดงผลตารางทางหน้าจอ
+        System.out.println("      Show board display!!!      ");
+        for (int i = 0; i < boardSize; i++) { 
+            for (int j = 0; j < boardSize; j++) {
+                Figure figure = chessBoard[i][j];
+                if (figure != null) {
+                    System.out.print(" "+figure.getName().substring(0,2) + " ");
+                } else {
+                    System.out.print(" -- ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("--------------------------------");
+    }
+}
