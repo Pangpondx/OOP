@@ -1,0 +1,35 @@
+package boardgame;
+
+public class Bishop extends Figure {
+
+    public Bishop(String name, boolean isWhite, int row, int column) {
+        super(name, isWhite, row, column);
+    }
+
+    @Override
+    void move(ChessBoard board, int destRow, int destColumn) {
+        if ((destRow < 1) || (destRow > 8) || (destColumn < 1) || (destColumn > 8)) {
+            System.out.println("The specified destination is out of range. Command aborted!\n");
+            return;
+        } else if (Math.abs(this.currentRow - destRow) == Math.abs(this.currentColumn - destColumn)) {
+            int rowDirection = Integer.compare(destRow, this.currentRow);
+            int colDirection = Integer.compare(destColumn, this.currentColumn);
+            int checkRow = this.currentRow + rowDirection;
+            int checkColumn = this.currentColumn + colDirection;
+            while (checkRow != destRow && checkColumn != destColumn) {
+                if (board.board[checkRow - 1][checkColumn - 1] != null && board.board[destRow - 1][destColumn - 1].isWhite == this.isWhite) {
+                    System.out.println("There is an obstacle in the path. Command aborted!\n");
+                    return;
+                }
+                checkRow += rowDirection;
+                checkColumn += colDirection;
+            }
+            board.board[this.currentRow - 1][this.currentColumn - 1] = null;
+            this.currentRow = destRow;
+            this.currentColumn = destColumn;
+            board.board[destRow - 1][destColumn - 1] = this;
+        } else {
+            System.out.println("Invalid move!");
+        }
+    }
+}
