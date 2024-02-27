@@ -1,0 +1,16 @@
+package boardgame;
+
+public class Main {
+
+    public static void main(String[] args) {
+        ChessBoard b = new ChessBoard();
+        b.initializeBoard();
+        b.displayBoard();
+        b.move("P2", 3, 1);
+        b.displayBoard();
+        b.move("P2", 2, 2);
+        b.displayBoard();
+        b.move("V1", 2, 2);
+        b.displayBoard();
+    }
+}
