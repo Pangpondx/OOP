@@ -1,0 +1,88 @@
+package BoardGame;
+
+public class Pawn extends Figure {
+
+    private boolean hasMoved;
+    private int destRow;
+    private int destColumn;
+
+    public Pawn(String name, boolean isWhite, int currentRow, int currentColumn) {
+        super(name, isWhite, currentRow, currentColumn);
+        this.hasMoved = false;
+    }
+
+    @Override
+    public void freeMove(Board board, int destRow, int destColumn) {
+        this.destRow = destRow;
+        this.destColumn = destColumn;
+
+        int newRow = destRow - this.currentRow;
+        int newColumn = destColumn - this.currentColumn;
+
+        if (newRow == 0) {
+            System.out.println("Cannot move " + getName() + " because it's the current position.");
+            return;
+        }
+
+        if (board.board[destRow][destColumn] != null && board.board[destRow][destColumn].isWhite == this.isWhite) {
+            System.out.println("Cannot move " + getName() + " because of an obstruction by a figure of the same color.");
+            return;
+        }
+
+        //เงือนไขตรวจสอบการเดิน
+        if (newColumn == 0) {
+            // เดิน 2 ช่อง ตาแรก
+            if ((isWhite && !hasMoved && newRow == -2) || (!isWhite && !hasMoved && newRow == 2)) {
+                if (board.board[destRow][destColumn] == null) {
+                    System.out.println("Move " + getName() + " two squares forward");
+                    board.board[this.currentRow][this.currentColumn] = null;
+                    this.currentRow = destRow;
+                    this.currentColumn = destColumn;
+                    board.board[destRow][destColumn] = this;
+                    hasMoved = true;
+                    return;
+                } else {
+                    System.out.println("Cannot move " + getName() + " because of an obstruction.");
+                    return;
+                }
+            }
+            //เดิน 1 ช่อง
+            else if ((isWhite && newRow == -1) || (!isWhite && newRow == 1)) {
+                if (board.board[destRow][destColumn] == null) {
+                    System.out.println("Move " + getName() + " one square forward");
+                    board.board[this.currentRow][this.currentColumn] = null;
+                    this.currentRow = destRow;
+                    this.currentColumn = destColumn;
+                    board.board[destRow][destColumn] = this;
+                    // ดูว่าแปรงร่างได้ไหม
+                    Promoting(board);
+                    return;
+                } else {
+                    System.out.println("Cannot move " + getName() + " because of an obstruction.");
+                }
+            }
+        }
+        // การกินแนวเฉียง
+        else if ((isWhite && newRow == -1 && Math.abs(newColumn) == 1)||(!isWhite && newRow == 1 && Math.abs(newColumn) == 1) ) {
+            if (board.board[destRow][destColumn] != null && board.board[destRow][destColumn].isWhite != this.isWhite) {
+                System.out.println("Capture with " + getName());
+                board.board[this.currentRow][this.currentColumn] = null;
+                this.currentRow = destRow;
+                this.currentColumn = destColumn;
+                board.board[destRow][destColumn] = this;
+                 // ดูว่าแปรงร่างได้ไหม
+                Promoting(board);
+                return;
+            }
+        }
+
+        System.out.println("Invalid move for " + getName().substring(0, 4));
+    }
+// แปรงร่าง!!! ใช้สำหรับตรวจดูว่าเดินถึงฝั่งศัตรูหรือยัง ก่อนที่จะ  return  ทุกเงือนไข 
+    private void Promoting(Board board) {
+        if ((isWhite && destRow == 0) || (!isWhite && destRow == 7)) {
+            System.out.println("Pawn has reached the opponent's side. Promoting to bishop.");
+            board.board[this.currentRow][this.currentColumn] = new Bishop("B" + getName().charAt(1), isWhite, this.currentRow, this.currentColumn);
+        }
+    }
+}
