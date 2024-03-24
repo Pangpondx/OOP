@@ -1,22 +1,45 @@
-package board.game;
+package BoardGame;
 
-public class BoardGame {
-
+public class Main {
     public static void main(String[] args) {
-        Board b = new Board(8); //สร้างอาเรย์ขนาด8*8
-        Figure p = new Figure("PP","White",1,1); //สร้างFigureโดยกำหนดสีและตำแหน่งที่ยืน
-        Figure v = new Figure("VD","White",2,4);
-        Figure o = new Figure("OA","Black",7,8);
-        Figure g = new Figure("GU","Black",5,3);
-        b.setFigure(p); //เซ็ทPositionภายในบอร์ด
-        b.setFigure(v);
-        b.setFigure(o);
-        b.setFigure(g);
-        b.moveTo(p, 1, 2); //เคลื่อนย้ายFigure
-        b.moveTo(o, 8, 8);
-        b.moveTo(v, 1, 8);
-        b.moveTo(g, 10, 7);
-        b.moveTo(g, -1, 8);
-        b.moveTo(g, 1, 2);
+        Board b = new Board();
+        b.initializeBoard();
+        b.displayBoard();
+        // ลองPawnเดิน 1 ช่อง
+        b.move("V3", 3, 3);
+        b.displayBoard();
+        // ลองPawnเดิน 2 ช่อง
+        b.move("P4", 5, 6);
+        b.displayBoard();
+        // ลองBishopเดินแนวเฉียง
+        b.move("P2", 3, 1);
+        b.displayBoard();
+        b.move("P2", 2, 2);
+        b.displayBoard();
+        // ลองBishopกินหมากฝั่งตรงข้าม
+        b.move("V1", 2, 2);
+        b.displayBoard();
+        // ลองBishopกินหมากฝั่งตัวเอง
+        b.move("V1", 3, 3);
+        b.displayBoard();
+        // ลองBishopเดินข้ามหมากฝั่งตัวเอง
+        b.move("V1", 4, 4);
+        b.displayBoard();
+        //ลองเดินBishopให้โดนPawnฝั่งตรงข้ามกิน
+        b.move("V1", 1, 3);
+        b.displayBoard();
+        b.move("V1", 3, 5);
+        b.displayBoard();
+        // ลองเดินPawnเพื่อกินBishopฝั่งตรงข้าม
+        b.move("P4", 4, 6);
+        b.displayBoard();
+        // ลองPawnกินหมากฝั่งตรงข้าม
+        b.move("P4", 3, 5);
+        b.displayBoard();
+        // ลองPawnให้แปลงร่าง
+        b.move("P4", 2, 5);
+        b.displayBoard();
+        b.move("P4", 1, 5);
+        b.displayBoard();
     }
 }
