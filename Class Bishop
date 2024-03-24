@@ -1,35 +1,48 @@
-package boardgame;
+package BoardGame;
 
 public class Bishop extends Figure {
 
-    public Bishop(String name, boolean isWhite, int row, int column) {
-        super(name, isWhite, row, column);
+    // สร้างคอนสตรักเตอร์สำหรับบิชอป รับชื่อ สี และตำแหน่งเริ่มต้น
+    public Bishop(String name, boolean isWhite, int currentRow, int currentColumn) {
+        super(name, isWhite, currentRow, currentColumn);
     }
 
+    // ฟังก์ชันสำหรับการเคลื่อนที่อิสระของBishopบนกระดาน
     @Override
-    void move(ChessBoard board, int destRow, int destColumn) {
-        if ((destRow < 1) || (destRow > 8) || (destColumn < 1) || (destColumn > 8)) {
-            System.out.println("The specified destination is out of range. Command aborted!\n");
-            return;
-        } else if (Math.abs(this.currentRow - destRow) == Math.abs(this.currentColumn - destColumn)) {
-            int rowDirection = Integer.compare(destRow, this.currentRow);
-            int colDirection = Integer.compare(destColumn, this.currentColumn);
-            int checkRow = this.currentRow + rowDirection;
-            int checkColumn = this.currentColumn + colDirection;
-            while (checkRow != destRow && checkColumn != destColumn) {
-                if (board.board[checkRow - 1][checkColumn - 1] != null && board.board[destRow - 1][destColumn - 1].isWhite == this.isWhite) {
-                    System.out.println("There is an obstacle in the path. Command aborted!\n");
-                    return;
+    public void freeMove(Board board, int destRow, int destColumn) {
+        // ตรวจสอบว่าการเคลื่อนที่เป็นแบบทแยงมุมหรือไม่
+        if (Math.abs(destRow - this.currentRow) == Math.abs(destColumn - this.currentColumn)) {
+            // คำนวณทิศทางการเคลื่อนที่ Math.abs = กลับเป็นค่า (;d แอบสลูท)
+            int deltaX = destRow > this.currentRow ? 1 : -1;
+            int deltaY = destColumn > this.currentColumn ? 1 : -1;
+            int x = this.currentRow + deltaX;
+            int y = this.currentColumn + deltaY;
+
+            // ตรวจสอบว่ามีหมากอยู่บนทางหรือไม่
+            while (x != destRow || y != destColumn) {
+                if (board.board[x][y] != null) {
+                    System.out.println("Cannot move  " + getName() +  " because of an Figure obstruction .");
+                    return; // ยกเลิกการเคลื่อนที่
                 }
-                checkRow += rowDirection;
-                checkColumn += colDirection;
+                x += deltaX;
+                y += deltaY;
             }
-            board.board[this.currentRow - 1][this.currentColumn - 1] = null;
-            this.currentRow = destRow;
+
+            // ตรวจสอบว่าตำแหน่งเป้าหมายว่ามีหมากสีเดียวกันหรือไม่
+            if (board.board[destRow][destColumn] != null && board.board[destRow][destColumn].isWhite == this.isWhite) {
+                System.out.println("Cannot move  " + getName() +  " because of an Figure same color obstruction .");
+                return; // ยกเลิกการเคลื่อนที่
+            }
+
+            // ลงมือทำการเคลื่อนที่Bishop
+            System.out.println("Move " + getName() + " to (" + (destRow+1) + ", " + (destColumn+1) + ")");
+            board.board[this.currentRow][this.currentColumn] = null; // ลบออกจากตำแหน่งปัจจุบัน
+            this.currentRow = destRow; // อัพเดทตำแหน่ง
             this.currentColumn = destColumn;
-            board.board[destRow - 1][destColumn - 1] = this;
+            board.board[destRow][destColumn] = this; // วางBishopในตำแหน่งใหม่
+         
         } else {
-            System.out.println("Invalid move!");
+            System.out.println("Invalid move for Bishop. Bishops can only move diagonally. ");
         }
-    }
+    }  
 }
